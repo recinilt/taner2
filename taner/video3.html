@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Drive Video Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        iframe {
+            width: 80%;
+            max-width: 800px;
+            height: 450px;
+            border: none;
+        }
+        .button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        // Sağ tıklamayı devre dışı bırak
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Klavye kısayollarını devre dışı bırak
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.key === 's' || e.key === 'u' || e.key === 'p')) {
+                e.preventDefault();
+            }
+        });
+
+        function changeVideo(link) {
+            const iframe = document.getElementById('videoFrame');
+            const videoId = link.match(/\/d\/([a-zA-Z0-9_-]+)/)[1];
+            iframe.src = `https://drive.google.com/file/d/${videoId}/preview`;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Google Drive Video Player</h1>
+        <iframe id="videoFrame" src="https://drive.google.com/file/d/1ELAaO0BWqw9JotWh_OY2k7H6dd3SG8dt/preview" allow="autoplay; encrypted-media" allowfullscreen sandbox="allow-scripts allow-same-origin"></iframe>
+        <div>
+            <button class="button" onclick="changeVideo('https://drive.google.com/file/d/1Xv6SrnP9t7C-zKZzSDzvpZhCSiLKwJLL/view?usp=sharing')">1. Video</button>
+            <button class="button" onclick="changeVideo('https://drive.google.com/file/d/1b5guIGTKNZSG9iE44nAr7MTRGIoY2c06/view?usp=sharing')">2. Video</button>
+            <button class="button" onclick="changeVideo('https://drive.google.com/file/d/1d86oDcXJFp7bTclMG3yxM7mv9ec-Ha9U/view?usp=sharing')">1. Hafta Çözümleri</button>
+            <button class="button" onclick="changeVideo('https://drive.google.com/file/d/1d3gx4-lDzpJLLej6xM8G69p_s3AioVML/view?usp=sharing')">2. Hafta Çözümleri</button>
+            <button class="button" onclick="changeVideo('https://drive.google.com/file/d/1guE1MS1Y9IH_ZeOSk-41F-pqNnwmi3fN/view?usp=sharing')">3. Hafta Çözümleri</button>
+            <button class="button" onclick="changeVideo('https://drive.google.com/file/d/1jQ_usvWE7q3ai8CKtAKkY4lt-yuPmFI9/view?usp=sharing')">1. Etap Genel Tekrar</button>
+        </div>
+    </div>
+</body>
+</html>

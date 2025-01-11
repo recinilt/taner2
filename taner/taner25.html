@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Soru Uygulaması</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    .uygulama-listesi {
+      list-style: none;
+      padding: 0;
+    }
+
+    .uygulama-listesi li {
+      cursor: pointer;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 5px;
+    }
+
+    /* Aktif uygulama stili */
+    .uygulama-listesi li.aktif {
+      background-color: rgba(0, 0, 0, 0.1);
+      /* Saydam gri renk */
+    }
+
+    .soru-alani {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+
+    .soru-satiri {
+      display: inline-block;
+      cursor: pointer;
+      white-space: pre-wrap;
+      /* Boşlukları ve satır sonlarını koru */
+    }
+
+    .ayrac {
+      border-top: 1px solid #ccc;
+      margin: 10px 0;
+    }
+
+    .input-alani {
+      width: 100%;
+      padding: 5px;
+      box-sizing: border-box;
+      margin: 5px 0;
+    }
+
+    .kirmizi {
+      color: red;
+    }
+
+    .sil-butonu {
+      color: red;
+      cursor: pointer;
+      float: left;
+      margin-right: 10px;
+    }
+
+    .uygulama-sil-butonu {
+      color: red;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-right: 10px;
+    }
+
+    /* Mobil uyumluluk için eklenen stiller */
+    @media (max-width: 768px) {
+
+      .input-alani {
+        font-size: 16px; 
+      }
+
+      .soru-satiri {
+        font-size: 18px; 
+      }
+
+      .sil-butonu, .uygulama-sil-butonu {
+        font-size: 20px; 
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Uygulamalar</h1>
+  <ul class="uygulama-listesi" id="uygulamaListesi"></ul>
+
+  <div id="soruAlani" style="display:none;"></div>
+
+  <script>
+
+    var ikinciEtapBirinciHaftaUygulamalar = {
+    "13UygulamaTrSoru": {
+        "soru1": "Salondaki başkan ani bir kararla grubu dağıtabilir.",
+        "kelimeler1": "(president/hall/sudden/decision disperse)",
+        "soru2": "Bu testi geçen yıl masadaki bir kurbağa üzerinde uyguladık.",
+        "kelimeler2": "(frog/apply)",
+        "soru3": "Sokaktaki adam dün bizimle samimiyetsiz konuştu.",
+        "kelimeler3": "(street/man/insincere)",
+        "soru4": "Anahtarları odadaki çekmeceye koyabilirsin.",
+        "kelimeler4": "(key/drawer/put)",
+        "soru5": "Günlerini internetteki saçma oyunlar ile harcamamalısın.",
+        "kelimeler5": "(nonsense/spend)",
+        "soru6": "Balıktaki besin değerleri sağlığın için faydalıdır.",
+        "kelimeler6": "(fish/nutritive value/health/ beneficial)",
+        "soru7": "Bebekler aynadaki yansımalarına bakmayı severler.",
+        "kelimeler7": "(reflection/mirror)",
+        "soru8": "Hastanedeki ünlü doktor cesur ameliyatından dolayı bütün gazetelerde.",
+        "kelimeler8": "(brave/surgery/newspapers)",
+        "soru9": "Duvardaki ayrıştırıcı siyasi yazıyı onaylamıyoruz.",
+        "kelimeler9": "(discriminating/political/approve of)",
+        "soru10": "Tabaktaki yiyecek alerjik bir etki gösterebilir.",
+        "kelimeler10": "(plate/food/allergic/reaction/show)"
+    },
+    "13UygulamaEnSoru": {
+        "soru1": "Turkey is a developing country.",
+        "kelimeler1": "(develop: geliş- / country:ülke)",
+        "soru2": "Turkey is still developing.",
+        "kelimeler2": "(still: hala / develop: geliş-)",
+        "soru3": "Developing is crucial.",
+        "kelimeler3": "(develop: geliş-, crucial: önemli,)",
+        "soru4": "Developing a software about kids contribute to their education.",
+        "kelimeler4": "(develop: geliş-/software: yazılım/kid: çocuk/contribute: katkı sağla-)",
+        "soru5": "Acquiring a language is freedom to speak in all countries.",
+        "kelimeler5": "(acquire: edin-/language: dil/freedom: özgürlük / country: ülke)",
+        "soru6": "The film is about suffering people in desolate countries.",
+        "kelimeler6": "(about: ile ilgili, hakkında /suffer: acı çek-/ desolate: ıssız, ihmal edilmiş)",
+        "soru7": "This is the difference between a hardworking student and an inactive one.",
+        "kelimeler7": "(difference: fark / between: arasında / hardworking: çalışan, çalışkan / inactive: tembel)",
+        "soru8": "You may have breathing difficulty.",
+        "kelimeler8": "(have: çek-/ breathe: nefes al-/difficulty: güçlük)",
+        "soru9": "Cooking for my guests is my duty in this hotel.",
+        "kelimeler9": "(cook: yemek pişir-/guest: misafir/ duty: görev)",
+        "soru10": "To run your social media you should be good at digital marketing.",
+        "kelimeler10": "(run: yönet-/ be good: iyi ol-/digital marketing: dijital pazarlama)"
+    },
+    "14UygulamaTrSoru": {
+        "soru1": "Denetleme esnasında herhangi bir şey farketmedik.",
+        "kelimeler1": "(inspection /anything/notice)",
+        "soru2": "Şehrin bu bölgesi kültürel festivalleriyle meşhurdur.",
+        "kelimeler2": "(city/region/famous for)",
+        "soru3": "Bu bilgisayarda önemli notlarımı saklıyorum.",
+        "kelimeler3": "(computer/vital/note/keep)",
+        "soru4": "Anlaşmanın hükümler ve koşullarına uymak zorundasın.",
+        "kelimeler4": "(comply withterms//conditions/treaty)",
+        "soru5": "Kendini halkına adadı.",
+        "kelimeler5": "(dedicate/public)",
+        "soru6": "Filmdeki kız ödül kazanan bir oyuncu (dur).",
+        "kelimeler6": "(movie/award/actress)",
+        "soru7": "Yeni evim yarı müstakildir.",
+        "kelimeler7": "(semidetached-)",
+        "soru8": "Favori restoranımızdan sıcak yemek sipariş edeceğiz.",
+        "kelimeler8": "(order/take-out / favorite)",
+        "soru9": "Müdür dosyadaki raporu patrona vermek zorunda.",
+        "kelimeler9": "(boss/file/report/manager/give)",
+        "soru10": "Dijital platformlarda bir yabancıya asla güvenmem.",
+        "kelimeler10": "(trust/strangerdigital//platforms)"
+    },
+    "14UygulamaEnSoru": {
+        "soru1": "Are you serious about moving to London?",
+        "kelimeler1": "(serious: ciddi/ about:konusunda/move: taşın-)",
+        "soru2": "My plan regarding moving to Canada is false information.",
+        "kelimeler2": "(move: taşın-/regarding: konusunda / false: yanlış/ information: bilgi)",
+        "soru3": "Changing your job is not a good decision for solving this problem.",
+        "kelimeler3": "(change: değiştir-/job: iş (meslek)/ decision: karar/solve: çöz-)",
+        "soru4": "We are searching for a loan to buy a car.",
+        "kelimeler4": "(search: ara-/loan: kredi/buy: satın al-)",
+        "soru5": "The principal is calling you to submit the exam papers.",
+        "kelimeler5": "(Principal:Okul müdürü /call: çağır-/submit: teslim et-/exam: sınav)",
+        "soru6": "Finding an experienced person at this time can speed up the production process.",
+        "kelimeler6": "(Experienced: tecrübeli /speed up: hızlandır-/production: üretim/process: süreci)",
+        "soru7": "You should take this pill before sleeping.",
+        "kelimeler7": "(Take: al-/pill: ilaç / sleep: uyu-)",
+        "soru8": "Using a computer to teach something to a baby may be harmful.",
+        "kelimeler8": "(computer: bilgisayar/ something: bir şey/ harmful: zararlı)",
+        "soru9": "During driving, I must be cautious about the traffic signs.",
+        "kelimeler9": "(Drive: Sür-/cautious: dikkatli / traffic sign: trafik levhası)",
+        "soru10": "The support of my family is my source of motivation.",
+        "kelimeler10": "(Support: destek)"
+    },
+    "15UygulamaTrSoru": {
+        "soru1": "Bu kapsamlı projeyle, Asya'daki müşterilerimize yeni bir ödeme şekli sunabiliriz.",
+        "kelimeler1": "(extensive/project/client/payment/way/offer)",
+        "soru2": "Bugünden itibaren, swot analizlerinizi bilgisayarınızda hazırla(y)abilirsiniz.",
+        "kelimeler2": "(swot analysis/computer/prepare)",
+        "soru3": "Suçlu arabayı çaldığını itiraf etti.",
+        "kelimeler3": "(criminal/steal / want)",
+        "soru4": "Bu programda sosyal güvenlik sistemini geniş bir şekilde tartışıyoruz.",
+        "kelimeler4": "(social/security/system/broad-/discuss)",
+        "soru5": "Kimya öğretmeni kurstaki öğrencilerine düzenli olarak zor ödevler verir.",
+        "kelimeler5": "(Chemistry/teacher/course/student/regular-/difficult/assignment/give)",
+        "soru6": "Sağlıklı bir yaşam için, çocuklarınızı erken saatte uyandırmalısınız.",
+        "kelimeler6": "(healthy/life/kid/early/hour/wake up)",
+        "soru7": "Sınav kağıdındaki doğru seçeneği kurşun kalemle daire içine almalısınız.",
+        "kelimeler7": "(right/option/pencil/circle: daire içine al-)",
+        "soru8": "Sosyal bir devlet her durumda toplum için çabalamak zorunda.",
+        "kelimeler8": "(social/state/case/society/strive)",
+        "soru9": "Instagram hesabımdaki her fotoğrafı arşivledim.",
+        "kelimeler9": "(account/photo/archive)",
+        "soru10": "Stadyumdaki çılgın taraftarlar maçta büyük bir olay çıkarabilir.",
+        "kelimeler10": "(crazy/fan/match/ create a stink)"
+    },
+    "15UygulamaEnSoru": {
+        "soru1": "Receiving a letter from Hogwarts in 2000 changed his life.",
+        "kelimeler1": "(receive: al-/letter: mektup/change: değiştir- / life: hayat)",
+        "soru2": "Shouting at the children in the park yesterday did not make sense.",
+        "kelimeler2": "(shout at: (kızgın bir şekilde) bağır-/make sense: mantıklı gel-)",
+        "soru3": "My mother is working.",
+        "kelimeler3": "(work: çalış)",
+        "soru4": "My mother is a working woman.",
+        "kelimeler4": "(woman: kadın)",
+        "soru5": "My mother is a woman working for her kids.",
+        "kelimeler5": "(kid: çocuk)",
+        "soru6": "Working as a nurse in Turkey is not easy.",
+        "kelimeler6": "(nurse: hemşire/ easy: kolay)",
+        "soru7": "As a working person, I should sleep before 11.",
+        "kelimeler7": "(person: kişi/ sleep: uyu)",
+        "soru8": "You have to pay to attend the personal development and yoga camp.",
+        "kelimeler8": "(pay: öde-/attend: katıl-/personal development: kişisel gelişim)",
+        "soru9": "Being a good sportsman requires stability.",
+        "kelimeler9": "(require: gerektir-/stability: istikrar)",
+        "soru10": "You should be careful about not using a political word.",
+        "kelimeler10": "(careful: dikkatli /use: kullan-/political: siyasi)"
+    },
+    "16UygulamaTrSoru": {
+        "soru1": "Bu arabanın yeni sahibi arkadaşımın kuzeni.",
+        "kelimeler1": "(owner)",
+        "soru2": "Yarın, konferansımız giriş salonunda gerçekleşecektir.",
+        "kelimeler2": "(conference/foyer)",
+        "soru3": "Bu eğitim sürecinizin önemli bir parçasıdır.",
+        "kelimeler3": "(training/consequential/process)",
+        "soru4": "Ekonomik sorunlar halkın ruh halini etkiler.",
+        "kelimeler4": "(Economic/mood/public)",
+        "soru5": "Kitaplar zaman geçirmek ve bilgili olmak için harika bir yoldur.",
+        "kelimeler5": "(pass time/knowledgeable)",
+        "soru6": "Amcamın komşuları genellikle esnaf(tır).",
+        "kelimeler6": "(uncle/neighbor/general/shopkeeper)",
+        "soru7": "Babaannem boğazım için bir bitki çayı önerdi.",
+        "kelimeler7": "(throat/herbal/recommend)",
+        "soru8": "Türkiye'nin ekonomik istikrarsızlığı bürokratların ruhsal dengesini bozabilir.",
+        "kelimeler8": "(economical/ instability/bureaucrat/balance/psychological/ruin)",
+        "soru9": "Şirketin finansal durumu için bir şey önerebilir miyim?",
+        "kelimeler9": "(Company/financial/status/something/suggest)",
+        "soru10": "Kredi kartı kullanmanın avantajlarından biri taksitli ödemedir.",
+        "kelimeler10": "(Advantage/installment)"
+    },
+    "16UygulamaEnSoru": {
+        "soru1": "Making a new agreement now would be risky.",
+        "kelimeler1": "(new: yeni / agreement: sözleşme / risky: riskli)",
+        "soru2": "They went to the other office to bring the briefcases.",
+        "kelimeler2": "(go: git-/bring: getir-/briefcase: evrak çantası)",
+        "soru3": "The jury liked her singing at the concert.",
+        "kelimeler3": "(jury: jüri/ sing: şarkı söy-/concert: konser)",
+        "soru4": "Her singing a song of Bob Marley surprised her colleagues.",
+        "kelimeler4": "(sing: (şarkı) söy-/surprise: şaşırt-/colleague: iş arkadaşı)",
+        "soru5": "Our being in the garden at that moment saved our lives.",
+        "kelimeler5": "(save: kurtar-/life: hayat- lives: hayatlar)",
+        "soru6": "I am proud of being a part of this organization.",
+        "kelimeler6": "(proud: gurur/organization: organizasyon)",
+        "soru7": "Drinking 3 cups of coffee in one day may harm health.",
+        "kelimeler7": "(cups of: fincan/harm: zarar ver- / health: sağlık)",
+        "soru8": "You must take a shower before swimming.",
+        "kelimeler8": "(take: al-/shower: duş / swimming: yüzme)",
+        "soru9": "You made a big mistake by sending him to Cyprus.",
+        "kelimeler9": "(mistake: hata / send: gönder-)",
+        "soru10": "Changing the system will cause a problem in the future.",
+        "kelimeler10": "(change: değiştir-/cause: sebep/yarat-/future: gelecek)"
+    }
+};
+
+
+
+    var uygulamaListesi = document.getElementById("uygulamaListesi");
+    var soruAlani = document.getElementById("soruAlani");
+
+    // Lokal Storage'dan verileri yükle
+    var kaydedilenVeriler = localStorage.getItem("uygulamaVerileri");
+    var uygulamaVerileri = kaydedilenVeriler ? JSON.parse(kaydedilenVeriler) : {};
+
+    function verileriKaydet() {
+      localStorage.setItem("uygulamaVerileri", JSON.stringify(uygulamaVerileri));
+
+      // Verilerin kaydedildiğini doğrula
+      window.addEventListener('storage', function (event) {
+        if (event.key === "uygulamaVerileri") {
+          console.log("Veriler localStorage'a başarıyla kaydedildi.");
+        }
+      });
+    }
+
+    function soruyuTemizle(uygulamaAdi, soruKey) {
+      delete uygulamaVerileri[uygulamaAdi][soruKey];
+      verileriKaydet();
+      // Uygulamayı yeniden yükle
+      soruAlani.innerHTML = "";
+      uygulamayiYukle(uygulamaAdi);
+    }
+
+    function uygulamayiTemizle(uygulamaAdi) {
+      // Uygulama verilerini ikinciEtapBirinciHaftaUygulamalar'e göre sıfırla
+      uygulamaVerileri[uygulamaAdi] = {};
+      for (var soruKey in ikinciEtapBirinciHaftaUygulamalar[uygulamaAdi]) {
+        if (soruKey.startsWith("soru")) {
+          uygulamaVerileri[uygulamaAdi][soruKey] = {}; // Her soruyu sıfırla
+        }
+      }
+
+      verileriKaydet();
+
+      // Soru alanını temizle
+      soruAlani.innerHTML = "";
+    }
+
+    function uygulamayiYukle(uygulamaAdi) {
+      soruAlani.innerHTML = "";
+      var secilenUygulama = ikinciEtapBirinciHaftaUygulamalar[uygulamaAdi];
+      uygulamaVerileri[uygulamaAdi] = uygulamaVerileri[uygulamaAdi] || {}; // Uygulama verisini al, yoksa boş bir obje oluştur
+
+      for (var soruKey in secilenUygulama) {
+        if (soruKey.startsWith("soru")) {
+          (function (soruKey) { // Kapsam sorunu için IIFE kullandım
+            var soruNumarasi = soruKey.replace("soru", "");
+            var soruCumlesi = secilenUygulama[soruKey];
+            var kelimeCumlesi = secilenUygulama["kelimeler" + soruNumarasi];
+            uygulamaVerileri[uygulamaAdi][soruKey] = uygulamaVerileri[uygulamaAdi][soruKey] || {}; // Soru verisini al, yoksa boş bir obje oluştur
+
+            var soruDiv = document.createElement("div");
+            soruDiv.className = "soru-alani";
+
+            // Sil butonu ekle
+            var silButonu = document.createElement("span");
+            silButonu.textContent = "X ";
+            silButonu.className = "sil-butonu";
+            silButonu.addEventListener("click", function () {
+              soruyuTemizle(uygulamaAdi, soruKey); // Sadece soruyu temizle
+            });
+            soruDiv.appendChild(silButonu);
+
+            var ustInput = document.createElement("input");
+            ustInput.type = "text";
+            ustInput.className = "input-alani";
+            ustInput.value = uygulamaVerileri[uygulamaAdi][soruKey].ustInput || ""; // Kaydedilen değeri yükle
+            soruDiv.appendChild(ustInput);
+
+            var soruSatirDiv = document.createElement("div");
+            var soruNumaraSpan = document.createElement("span");
+            soruNumaraSpan.textContent = soruNumarasi + ". ";
+            soruSatirDiv.appendChild(soruNumaraSpan);
+
+            // Cümleyi karakterlere ayır ve span'lere ekle (BOŞLUKLAR DAHİL)
+            var soruKarakterleri = soruCumlesi.split("");
+            for (let i = 0; i < soruKarakterleri.length; i++) {
+              let karakter = soruKarakterleri[i];
+              let span = document.createElement("span");
+              span.className = "soru-satiri";
+              span.textContent = karakter;
+
+              // Kaydedilen işaretleri yükle
+              if (uygulamaVerileri[uygulamaAdi][soruKey].isaretler && uygulamaVerileri[uygulamaAdi][soruKey].isaretler.includes(i)) {
+                let slashSpan = document.createElement("span");
+                slashSpan.textContent = "/";
+                slashSpan.className = "kirmizi";
+                span.insertBefore(slashSpan, span.firstChild);
+              }
+
+              span.addEventListener("click", function (event) {
+                let mevcutText = event.target.textContent;
+                let isaretIndex = soruKarakterleri.slice(0, i).join("").length; // İşaretin konacağı index
+
+                if (mevcutText.startsWith("/")) {
+                  event.target.textContent = mevcutText.substring(1);
+                  // İşaret kaldırıldı, kayıttan sil
+                  uygulamaVerileri[uygulamaAdi][soruKey].isaretler = uygulamaVerileri[uygulamaAdi][soruKey].isaretler.filter(index => index !== isaretIndex);
+                } else {
+                  let slashSpan = document.createElement("span");
+                  slashSpan.textContent = "/";
+                  slashSpan.className = "kirmizi";
+                  event.target.insertBefore(slashSpan, event.target.firstChild);
+                  // İşaret eklendi, kayda ekle
+                  uygulamaVerileri[uygulamaAdi][soruKey].isaretler = uygulamaVerileri[uygulamaAdi][soruKey].isaretler || [];
+                  uygulamaVerileri[uygulamaAdi][soruKey].isaretler.push(isaretIndex);
+                }
+
+                verileriKaydet();
+              });
+              soruSatirDiv.appendChild(span);
+            }
+
+            soruDiv.appendChild(soruSatirDiv);
+
+            var kelimeSatirDiv = document.createElement("div");
+            kelimeSatirDiv.textContent = kelimeCumlesi;
+            soruDiv.appendChild(kelimeSatirDiv);
+
+            var altInput1 = document.createElement("input");
+            altInput1.type = "text";
+            altInput1.className = "input-alani";
+            altInput1.value = uygulamaVerileri[uygulamaAdi][soruKey].altInput1 || ""; // Kaydedilen değeri yükle
+            soruDiv.appendChild(altInput1);
+
+            var altInput2 = document.createElement("input");
+            altInput2.type = "text";
+            altInput2.className = "input-alani";
+            altInput2.value = uygulamaVerileri[uygulamaAdi][soruKey].altInput2 || ""; // Kaydedilen değeri yükle
+            soruDiv.appendChild(altInput2);
+
+            var ayrac = document.createElement("div");
+            ayrac.className = "ayrac";
+            soruDiv.appendChild(ayrac);
+
+            soruAlani.appendChild(soruDiv);
+
+            // Inputlardaki değişiklikleri dinle ve kaydet
+            ustInput.addEventListener("input", function () {
+              uygulamaVerileri[uygulamaAdi][soruKey].ustInput = this.value;
+              verileriKaydet();
+            });
+
+            altInput1.addEventListener("input", function () {
+              uygulamaVerileri[uygulamaAdi][soruKey].altInput1 = this.value;
+              verileriKaydet();
+            });
+
+            altInput2.addEventListener("input", function () {
+              uygulamaVerileri[uygulamaAdi][soruKey].altInput2 = this.value;
+              verileriKaydet();
+            });
+          })(soruKey);
+        }
+      }
+      soruAlani.style.display = "block";
+    }
+
+    for (var uygulamaAdi in ikinciEtapBirinciHaftaUygulamalar) {
+      (function (uygulamaAdi) { // Kapsam sorunu için IIFE kullandım
+        var li = document.createElement("li");
+
+        // Uygulama sil butonu ekle
+        var uygulamaSilButonu = document.createElement("p");
+        uygulamaSilButonu.textContent = "   X   "; // Boşluk eklendi
+        uygulamaSilButonu.className = "uygulama-sil-butonu kirmizi"; // Kırmızı renk eklendi
+        uygulamaSilButonu.style.fontWeight = "bold"; // Kalın font eklendi
+        uygulamaSilButonu.addEventListener("click", function (event) {
+          event.stopPropagation(); // Olayın listeye yayılmasını engelle
+          uygulamayiTemizle(uygulamaAdi);
+        });
+
+
+        li.textContent += uygulamaAdi; // Uygulama adını butondan sonra ekle
+        li.appendChild(uygulamaSilButonu);
+
+        li.addEventListener("click", function () {
+          // Diğer uygulamalardan .aktif sınıfını kaldır
+          var aktifUygulamalar = document.querySelectorAll('.uygulama-listesi li.aktif');
+          aktifUygulamalar.forEach(function (aktifUygulama) {
+            aktifUygulama.classList.remove('aktif');
+          });
+
+          // Tıklanan uygulamaya .aktif sınıfını ekle
+          this.classList.add('aktif');
+
+          uygulamayiYukle(uygulamaAdi);
+        });
+        uygulamaListesi.appendChild(li);
+      })(uygulamaAdi);
+    }
+  </script>
+
+</body>
+
+</html>

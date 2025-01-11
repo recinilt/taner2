@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UYGULAMALAR</title>
+    <link rel="stylesheet" href="style2.css">
+     <style>
+
+        .info-container {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            margin-left: 5px;
+        }
+
+        .info-icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 16px; /* Daha küçük ikon */
+            height: 16px;
+            background-color: #2196f3;
+            color: white;
+            border-radius: 50%;
+            font-size: 10px; /* Daha küçük font boyutu */
+            cursor: pointer;
+            border: 1px solid #bbdefb;
+            transition: background-color 0.3s ease;
+        }
+
+        .info-icon:hover {
+            background-color: #1976d2;
+            border-color: #64b5f6;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            width: 200px; /* Daha dar ipucu */
+            background-color: #fff;
+            color: #333;
+            text-align: left;
+            border-radius: 6px; /* Daha az yuvarlak köşeler */
+            padding: 10px; /* Daha az iç boşluk */
+            position: absolute;
+            z-index: 1;
+            bottom: 120%; /* Konumu biraz daha ayarladım */
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15); /* Daha hafif gölge */
+            border: 1px solid #eee;
+            font-size: 14px; /* İpucu metin boyutu */
+            line-height: 1.3;
+        }
+
+        .info-container:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-3px); /* Daha az kaydırma */
+        }
+
+        .tooltip h3 {
+            margin-top: 0;
+            margin-bottom: 5px; /* Daha az boşluk */
+            color: #2196f3;
+            font-size: 16px; /* Başlık boyutu */
+        }
+
+        .tooltip p {
+            margin-bottom: 5px; /* Daha az boşluk */
+        }
+
+        .tooltip a {
+            color: #2196f3;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .tooltip a:hover {
+            color: #1976d2;
+        }
+
+        #loader {
+            z-index:  '9999';
+            border: 16px solid #f3f3f3; /* iç rengi */
+            border-top: 16px solid #3498db; /* animasyon rengi */
+            border-radius: 50%; /* yuvarlak şekil */
+            width: 60px; /* genişlik */
+            height: 60px; /* yükseklik */
+            animation: spin 2s linear infinite; /* dönme animasyonu */
+            display: none; /* başlangıçta gizli */
+            /*position: absolute;*/
+            /*left: 0;*/ /* sol tarafa yasla */
+            /*top: 320px;*/ /* butonun altına yerleştir */
+            margin-left: 20px; /* sol boşluk */
+            
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Anasayfa</a></li>
+                <li><a href="birincietap.html">1. ETAP</a></li>
+                <li><a href="ikincietap.html">2. ETAP</a></li>
+                <li><a href="ucuncuetap.html">3. ETAP</a></li>
+                <li><a href="dorduncuetap.html">4. ETAP</a></li>
+                
+            </ul>
+        </nav>
+        <h1>1. ETAP SİTESİ</h1>
+  
+    </header>
+    <main>
+        <h2>Ders Anlatım Videoları</h2>
+        <ul>
+            <li><a href="taner1e1h.html">1. Gün</a></li>
+            <li><a href="taner1e2h.html">2. Gün</a></li>
+            
+            
+         
+            
+        </ul>
+
+        <h2>Uygulamalı Haftalar</h2>
+        <ul>
+            <li><a href="taner1e1h.html">1. Hafta</a></li>
+            <li><a href="taner1e2h.html">2. Hafta</a></li>
+            
+            <li><a href="taner1e3h.html">3. Hafta</a></li>
+         
+            
+        </ul>
+        <h2>Dökümanlar</h2>
+
+    </main>
+    <footer>
+        <p>&copy; 2025 Merhaba</p>
+    </footer>
+    
+</body>
+</html>

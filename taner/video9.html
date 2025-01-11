@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Drive Video Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        iframe {
+            width: 80%;
+            max-width: 800px;
+            height: 450px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ders Videoları</h1>
+        <button onclick="showVideo('AtsONtPQLeLUie1L3pSZK1zk4XDaWg', 'pZDkOP')">Konu Anlatımı 1. Video</button>
+        <button onclick="showVideo('1b5guIGTKNZSG9iE44nAr7MTRGIoY2c06')">Konu Anlatımı 2. Video</button>
+        <button onclick="showVideo('1d86oDcXJFp7bTclMG3yxM7mv9ec-Ha9U')">1. Hafta Çözümleri</button>
+        <button onclick="showVideo('1d3gx4-lDzpJLLej6xM8G69p_s3AioVML')">2. Hafta Çözümleri</button>
+        <button onclick="showVideo('1guE1MS1Y9IH_ZeOSk-41F-pqNnwmi3fN')">3. Hafta Çözümleri</button>
+        <button onclick="showVideo('1jQ_usvWE7q3ai8CKtAKkY4lt-yuPmFI9')">1. Etap Genel Tekrar</button>
+
+        <div id="videoPlayer">
+            </div>
+    </div>
+
+    <script>
+        function showVideo(fileId, e) {
+            let videoUrl = 'https://drive.google.com/file/d/' + fileId + '/preview';
+            if (e) {
+                videoUrl += '?e=' + e;
+            }
+
+            document.getElementById('videoPlayer').innerHTML = '<iframe src="' + videoUrl + '" allow="autoplay; encrypted-media" allowfullscreen sandbox="allow-scripts allow-same-origin"></iframe>';
+        }
+
+        // Sağ tıklamayı devre dışı bırak
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Klavye kısayollarını devre dışı bırak
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.key === 's' || e.key === 'u' || e.key === 'p')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

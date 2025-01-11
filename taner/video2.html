@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Drive Video Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        iframe {
+            width: 80%;
+            max-width: 800px;
+            height: 450px;
+            border: none;
+        }
+    </style>
+    <script>
+        // Sağ tıklamayı devre dışı bırak
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Klavye kısayollarını devre dışı bırak
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.key === 's' || e.key === 'u' || e.key === 'p')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Google Drive Video Player</h1>
+        <iframe src="https://drive.google.com/file/d/1ELAaO0BWqw9JotWh_OY2k7H6dd3SG8dt/preview" allow="autoplay; encrypted-media" allowfullscreen sandbox="allow-scripts allow-same-origin"></iframe>
+    </div>
+</body>
+</html>

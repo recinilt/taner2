@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Soru Uygulaması</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    .uygulama-listesi {
+      list-style: none;
+      padding: 0;
+    }
+
+    .uygulama-listesi li {
+      cursor: pointer;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 5px;
+    }
+
+    /* Aktif uygulama stili */
+    .uygulama-listesi li.aktif {
+      background-color: rgba(1, 69, 241, 0.146);
+      /* Saydam gri renk */
+    }
+
+    .soru-alani {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      background-color: rgba(1, 241, 109, 0.146);
+    }
+
+    .soru-satiri {
+      display: inline-block;
+      cursor: pointer;
+      white-space: pre-wrap;
+      /* Boşlukları ve satır sonlarını koru */
+    }
+
+    .ayrac {
+      border-top: 1px solid #ccc;
+      margin: 10px 0;
+    }
+
+    .input-alani {
+      width: 100%;
+      padding: 5px;
+      box-sizing: border-box;
+      margin: 5px 0;
+    }
+
+    .kirmizi {
+      color: red;
+    }
+
+    .sil-butonu {
+      color: red;
+      cursor: pointer;
+      float: left;
+      margin-right: 10px;
+    }
+
+    .uygulama-sil-butonu {
+      color: red;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-right: 10px;
+    }
+
+    /* Mobil uyumluluk için eklenen stiller */
+    @media (max-width: 768px) {
+
+      .input-alani {
+        font-size: 16px; 
+      }
+
+      .soru-satiri {
+        font-size: 18px; 
+      }
+
+      .sil-butonu, .uygulama-sil-butonu {
+        font-size: 20px; 
+      }
+    }
+  </style>
+      <link rel="stylesheet" href="style2.css">
+      <style>
+ 
+         .info-container {
+             display: inline-flex;
+             align-items: center;
+             position: relative;
+             margin-left: 5px;
+         }
+ 
+         .info-icon {
+             display: inline-flex;
+             justify-content: center;
+             align-items: center;
+             width: 16px; /* Daha küçük ikon */
+             height: 16px;
+             background-color: #2196f3;
+             color: white;
+             border-radius: 50%;
+             font-size: 10px; /* Daha küçük font boyutu */
+             cursor: pointer;
+             border: 1px solid #bbdefb;
+             transition: background-color 0.3s ease;
+         }
+ 
+         .info-icon:hover {
+             background-color: #1976d2;
+             border-color: #64b5f6;
+         }
+ 
+         .tooltip {
+             visibility: hidden;
+             width: 200px; /* Daha dar ipucu */
+             background-color: #fff;
+             color: #333;
+             text-align: left;
+             border-radius: 6px; /* Daha az yuvarlak köşeler */
+             padding: 10px; /* Daha az iç boşluk */
+             position: absolute;
+             z-index: 1;
+             bottom: 120%; /* Konumu biraz daha ayarladım */
+             left: 50%;
+             transform: translateX(-50%);
+             opacity: 0;
+             transition: opacity 0.3s, transform 0.3s;
+             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15); /* Daha hafif gölge */
+             border: 1px solid #eee;
+             font-size: 14px; /* İpucu metin boyutu */
+             line-height: 1.3;
+         }
+ 
+         .info-container:hover .tooltip {
+             visibility: visible;
+             opacity: 1;
+             transform: translateX(-50%) translateY(-3px); /* Daha az kaydırma */
+         }
+ 
+         .tooltip h3 {
+             margin-top: 0;
+             margin-bottom: 5px; /* Daha az boşluk */
+             color: #2196f3;
+             font-size: 16px; /* Başlık boyutu */
+         }
+ 
+         .tooltip p {
+             margin-bottom: 5px; /* Daha az boşluk */
+         }
+ 
+         .tooltip a {
+             color: #2196f3;
+             text-decoration: none;
+             font-weight: 500;
+             font-size: 14px;
+             transition: color 0.3s;
+         }
+ 
+         .tooltip a:hover {
+             color: #1976d2;
+         }
+ 
+         #loader {
+             z-index:  '9999';
+             border: 16px solid #f3f3f3; /* iç rengi */
+             border-top: 16px solid #3498db; /* animasyon rengi */
+             border-radius: 50%; /* yuvarlak şekil */
+             width: 60px; /* genişlik */
+             height: 60px; /* yükseklik */
+             animation: spin 2s linear infinite; /* dönme animasyonu */
+             display: none; /* başlangıçta gizli */
+             /*position: absolute;*/
+             /*left: 0;*/ /* sol tarafa yasla */
+             /*top: 320px;*/ /* butonun altına yerleştir */
+             margin-left: 20px; /* sol boşluk */
+             
+         }
+         @keyframes spin {
+             0% { transform: rotate(0deg); }
+             100% { transform: rotate(360deg); }
+         }
+     </style>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+
+<body>
+  <header>
+    <nav>
+        <ul>
+            <li><a href="index.html">Anasayfa</a></li>
+            <li><a href="birincietap.html">1. ETAP</a></li>
+            <li><a href="ikincietap.html">2. ETAP</a></li>
+            <li><a href="ucuncuetap.html">3. ETAP</a></li>
+            <li><a href="dorduncuetap.html">4. ETAP</a></li>
+            
+        </ul>
+    </nav>
+    <h1>UYGULAMA SİTESİ</h1>
+
+</header>
+<main>
+
+  <h1>TANER ÇAĞLI 2. ETAP 1. HAFTA</h1>
+<h1>Uygulamalar</h1>
+  <ul class="uygulama-listesi" id="uygulamaListesi"></ul>
+
+  <div id="soruAlani" style="display:none;"></div>
+
+  <div style="text-align: center; margin-top: 20px;">
+    <button id="screenshotButton" style="padding: 10px 20px; font-size: 16px;" onclick="myscreenshot()">Sayfa Fotoğrafını Çek</button>
+  </div>
+</main>
+<footer>
+  <p>&copy; 2025 Merhaba</p>
+</footer>
+<script src="uygulama2e1h.js"></script>
+  <script>
+
+function myscreenshot() {
+      html2canvas(document.getElementById("soruAlani")).then(canvas => { //html2canvas(document.getElementById("content")).then(canvas => {
+        // JPG formatında kaydetmek için canvas'ı dönüştür
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/jpeg");
+        link.download = "screenshot.jpg";
+        link.click();
+      });
+    }
+
+
+
+
+
+    var uygulamaListesi = document.getElementById("uygulamaListesi");
+    var soruAlani = document.getElementById("soruAlani");
+
+    // Lokal Storage'dan verileri yükle
+    var kaydedilenVeriler = localStorage.getItem("uygulamaVerileri2e1h");
+    var uygulamaVerileri2e1h = kaydedilenVeriler ? JSON.parse(kaydedilenVeriler) : {};
+
+    function verileriKaydet() {
+      localStorage.setItem("uygulamaVerileri2e1h", JSON.stringify(uygulamaVerileri2e1h));
+
+      // Verilerin kaydedildiğini doğrula
+      window.addEventListener('storage', function(event) {
+        if (event.key === "uygulamaVerileri2e1h") {
+          console.log("Veriler localStorage'a başarıyla kaydedildi.");
+        }
+      });
+    }
+
+    function soruyuTemizle(uygulamaAdi, soruKey) {
+      delete uygulamaVerileri2e1h[uygulamaAdi][soruKey];
+      verileriKaydet();
+      // Uygulamayı yeniden yükle
+      soruAlani.innerHTML = "";
+      uygulamayiYukle(uygulamaAdi);
+    }
+
+    function uygulamayiTemizle(uygulamaAdi) {
+      // Uygulama verilerini soruvekelimeler'e göre sıfırla
+      uygulamaVerileri2e1h[uygulamaAdi] = {};
+      for (var soruKey in soruvekelimeler[uygulamaAdi]) {
+        if (soruKey.startsWith("soru")) {
+          uygulamaVerileri2e1h[uygulamaAdi][soruKey] = {}; // Her soruyu sıfırla
+        }
+      }
+
+      verileriKaydet();
+
+      // Soru alanını temizle
+      soruAlani.innerHTML = "";
+    }
+
+    function uygulamayiYukle(uygulamaAdi) {
+      soruAlani.innerHTML = "";
+      var secilenUygulama = soruvekelimeler[uygulamaAdi];
+      uygulamaVerileri2e1h[uygulamaAdi] = uygulamaVerileri2e1h[uygulamaAdi] || {}; // Uygulama verisini al, yoksa boş bir obje oluştur
+      soruAlani.append(uygulamaAdi);
+      for (var soruKey in secilenUygulama) {
+        if (soruKey.startsWith("soru")) {
+          (function(soruKey) { // Kapsam sorunu için IIFE kullandım
+            var soruNumarasi = soruKey.replace("soru", "");
+            var soruCumlesi = secilenUygulama[soruKey];
+            var kelimeCumlesi = secilenUygulama["kelimeler" + soruNumarasi];
+            uygulamaVerileri2e1h[uygulamaAdi][soruKey] = uygulamaVerileri2e1h[uygulamaAdi][soruKey] || {}; // Soru verisini al, yoksa boş bir obje oluştur
+
+            var soruDiv = document.createElement("div");
+            soruDiv.className = "soru-alani";
+
+            // Sil butonu ekle
+            var silButonu = document.createElement("span");
+            silButonu.textContent = "X ";
+            silButonu.className = "sil-butonu";
+            silButonu.addEventListener("click", function() {
+              soruyuTemizle(uygulamaAdi, soruKey); // Sadece soruyu temizle
+            });
+            soruDiv.appendChild(silButonu);
+
+            var ustInput = document.createElement("input");
+            ustInput.type = "text";
+            ustInput.className = "input-alani";
+            ustInput.value = uygulamaVerileri2e1h[uygulamaAdi][soruKey].ustInput || ""; // Kaydedilen değeri yükle
+            soruDiv.appendChild(ustInput);
+
+            var soruSatirDiv = document.createElement("div");
+            var soruNumaraSpan = document.createElement("span");
+            soruNumaraSpan.textContent = soruNumarasi + ". ";
+            soruSatirDiv.appendChild(soruNumaraSpan);
+
+            // Cümleyi karakterlere ayır ve span'lere ekle (BOŞLUKLAR DAHİL)
+            var soruKarakterleri = soruCumlesi.split("");
+            for (let i = 0; i < soruKarakterleri.length; i++) {
+              let karakter = soruKarakterleri[i];
+              let span = document.createElement("span");
+              span.className = "soru-satiri";
+              span.textContent = karakter;
+
+              // Kaydedilen işaretleri yükle
+              if (uygulamaVerileri2e1h[uygulamaAdi][soruKey].isaretler && uygulamaVerileri2e1h[uygulamaAdi][soruKey].isaretler.includes(i)) {
+                let slashSpan = document.createElement("span");
+                slashSpan.textContent = "/";
+                slashSpan.className = "kirmizi";
+                span.insertBefore(slashSpan, span.firstChild);
+              }
+
+              span.addEventListener("click", function(event) {
+                let mevcutText = event.target.textContent;
+                let isaretIndex = soruKarakterleri.slice(0, i).join("").length; // İşaretin konacağı index
+
+                if (mevcutText.startsWith("/")) {
+                  event.target.textContent = mevcutText.substring(1);
+                  // İşaret kaldırıldı, kayıttan sil
+                  uygulamaVerileri2e1h[uygulamaAdi][soruKey].isaretler = uygulamaVerileri2e1h[uygulamaAdi][soruKey].isaretler.filter(index => index !== isaretIndex);
+                } else {
+                  let slashSpan = document.createElement("span");
+                  slashSpan.textContent = "/";
+                  slashSpan.className = "kirmizi";
+                  event.target.insertBefore(slashSpan, event.target.firstChild);
+                  // İşaret eklendi, kayda ekle
+                  uygulamaVerileri2e1h[uygulamaAdi][soruKey].isaretler = uygulamaVerileri2e1h[uygulamaAdi][soruKey].isaretler || [];
+                  uygulamaVerileri2e1h[uygulamaAdi][soruKey].isaretler.push(isaretIndex);
+                }
+
+                verileriKaydet();
+              });
+              soruSatirDiv.appendChild(span);
+            }
+
+            soruDiv.appendChild(soruSatirDiv);
+
+            var kelimeSatirDiv = document.createElement("div");
+            kelimeSatirDiv.textContent = kelimeCumlesi;
+            soruDiv.appendChild(kelimeSatirDiv);
+
+            var altInput1 = document.createElement("input");
+            altInput1.type = "text";
+            altInput1.className = "input-alani";
+            altInput1.value = uygulamaVerileri2e1h[uygulamaAdi][soruKey].altInput1 || ""; // Kaydedilen değeri yükle
+            soruDiv.appendChild(altInput1);
+
+            var altInput2 = document.createElement("input");
+            altInput2.type = "text";
+            altInput2.className = "input-alani";
+            altInput2.value = uygulamaVerileri2e1h[uygulamaAdi][soruKey].altInput2 || ""; // Kaydedilen değeri yükle
+            soruDiv.appendChild(altInput2);
+
+            var ayrac = document.createElement("div");
+            ayrac.className = "ayrac";
+            soruDiv.appendChild(ayrac);
+            
+            soruAlani.appendChild(soruDiv);
+
+            // Inputlardaki değişiklikleri dinle ve kaydet
+            ustInput.addEventListener("input", function() {
+              uygulamaVerileri2e1h[uygulamaAdi][soruKey].ustInput = this.value;
+              verileriKaydet();
+            });
+
+            altInput1.addEventListener("input", function() {
+              uygulamaVerileri2e1h[uygulamaAdi][soruKey].altInput1 = this.value;
+              verileriKaydet();
+            });
+
+            altInput2.addEventListener("input", function() {
+              uygulamaVerileri2e1h[uygulamaAdi][soruKey].altInput2 = this.value;
+              verileriKaydet();
+            });
+          })(soruKey);
+        }
+      }
+      
+      soruAlani.style.display = "block";
+    }
+
+    for (var uygulamaAdi in soruvekelimeler) {
+      (function(uygulamaAdi) { // Kapsam sorunu için IIFE kullandım
+        var li = document.createElement("li");
+
+        // Uygulama sil butonu ekle
+        var uygulamaSilButonu = document.createElement("span");
+        uygulamaSilButonu.textContent = "   X   "; // Boşluk eklendi
+        uygulamaSilButonu.className = "uygulama-sil-butonu kirmizi"; // Kırmızı renk eklendi
+        uygulamaSilButonu.style.fontWeight = "bold"; // Kalın font eklendi
+        uygulamaSilButonu.addEventListener("click", function(event) {
+          event.stopPropagation(); // Olayın listeye yayılmasını engelle
+          uygulamayiTemizle(uygulamaAdi);
+        });
+
+
+        li.textContent += uygulamaAdi; // Uygulama adını butondan sonra ekle
+        li.appendChild(uygulamaSilButonu);
+
+        li.addEventListener("click", function() {
+          // Diğer uygulamalardan .aktif sınıfını kaldır
+          var aktifUygulamalar = document.querySelectorAll('.uygulama-listesi li.aktif');
+          aktifUygulamalar.forEach(function(aktifUygulama) {
+            aktifUygulama.classList.remove('aktif');
+          });
+
+          // Tıklanan uygulamaya .aktif sınıfını ekle
+          this.classList.add('aktif');
+
+          uygulamayiYukle(uygulamaAdi);
+        });
+        uygulamaListesi.appendChild(li);
+      })(uygulamaAdi);
+    }
+  </script>
+
+</body>
+
+</html>

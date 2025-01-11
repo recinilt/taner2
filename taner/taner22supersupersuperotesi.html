@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Soru Uygulaması</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+
+    .uygulama-listesi {
+      list-style: none;
+      padding: 0;
+    }
+
+    .uygulama-listesi li {
+      cursor: pointer;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 5px;
+    }
+
+    /* Aktif uygulama stili */
+    .uygulama-listesi li.aktif {
+      background-color: rgba(0, 0, 0, 0.1); 
+      /* Saydam gri renk */
+    }
+
+    .soru-alani {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+
+    .soru-satiri {
+      display: inline-block;
+      cursor: pointer;
+      white-space: pre-wrap;
+      /* Boşlukları ve satır sonlarını koru */
+    }
+
+    .ayrac {
+      border-top: 1px solid #ccc;
+      margin: 10px 0;
+    }
+
+    .input-alani {
+      width: 100%;
+      padding: 5px;
+      box-sizing: border-box;
+      margin: 5px 0;
+    }
+
+    .kirmizi {
+      color: red;
+    }
+
+    .sil-butonu {
+      color: red;
+      cursor: pointer;
+      float: left;
+      margin-right: 10px;
+    }
+
+    .uygulama-sil-butonu {
+      color: red;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Uygulamalar</h1>
+  <ul class="uygulama-listesi" id="uygulamaListesi"></ul>
+
+  <div id="soruAlani" style="display:none;"></div>
+
+  <script>
+    var soruvekelimeler = {
+      "13TRSORU": {
+        "soru1": "Salondaki başkan ani bir kararla grubu dağıtabilir.",
+        "kelimeler1": "( president/ hall / sudden /decision disperse)",
+        "soru2": "Bu testi geçen yıl masadaki bir kurbağa üzerinde uyguladık.",
+        "kelimeler2": "(frog / apply)",
+        "soru3": "Sokaktaki adam dün bizimle samimiyetsiz konuştu.",
+        "kelimeler3": "(street/ man/insincere)"
+      },
+      "13ENSORU": {
+        "soru1": "Turkey is a developing country.",
+        "kelimeler1": "(develop: geliş- / country:ülke)",
+        "soru2": "Turkey is still developing.",
+        "kelimeler2": "(still: hala / develop: geliş-)",
+        "soru3": "Developing is crucial.",
+        "kelimeler3": "(develop: geliş-, crucial: önemli,)"
+      }
+    };
+
+
+
+    var uygulamaListesi = document.getElementById("uygulamaListesi");
+    var soruAlani = document.getElementById("soruAlani");
+
+    // Lokal Storage'dan verileri yükle
+    var kaydedilenVeriler = localStorage.getItem("uygulamaVerileri");
+    var uygulamaVerileri = kaydedilenVeriler ? JSON.parse(kaydedilenVeriler) : {};
+
+    function verileriKaydet() {
+      localStorage.setItem("uygulamaVerileri", JSON.stringify(uygulamaVerileri));
+
+      // Verilerin kaydedildiğini doğrula
+      window.addEventListener('storage', function(event) {
+        if (event.key === "uygulamaVerileri") {
+          console.log("Veriler localStorage'a başarıyla kaydedildi.");
+        }
+      });
+    }
+
+    function soruyuTemizle(uygulamaAdi, soruKey) {
+      delete uygulamaVerileri[uygulamaAdi][soruKey];
+      verileriKaydet();
+      // Uygulamayı yeniden yükle
+      soruAlani.innerHTML = "";
+      uygulamayiYukle(uygulamaAdi);
+    }
+
+    function uygulamayiTemizle(uygulamaAdi) {
+      // Uygulama verilerini soruvekelimeler'e göre sıfırla
+      uygulamaVerileri[uygulamaAdi] = {};
+      for (var soruKey in soruvekelimeler[uygulamaAdi]) {
+        if (soruKey.startsWith("soru")) {
+          uygulamaVerileri[uygulamaAdi][soruKey] = {}; // Her soruyu sıfırla
+        }
+      }
+
+      verileriKaydet();
+
+      // Soru alanını temizle
+      soruAlani.innerHTML = "";
+    }
+
+    function uygulamayiYukle(uygulamaAdi) {
+      soruAlani.innerHTML = "";
+      var secilenUygulama = soruvekelimeler[uygulamaAdi];
+      uygulamaVerileri[uygulamaAdi] = uygulamaVerileri[uygulamaAdi] || {}; // Uygulama verisini al, yoksa boş bir obje oluştur
+
+      for (var soruKey in secilenUygulama) {
+        if (soruKey.startsWith("soru")) {
+          (function(soruKey) { // Kapsam sorunu için IIFE kullandım
+            var soruNumarasi = soruKey.replace("soru", "");
+            var soruCumlesi = secilenUygulama[soruKey];
+            var kelimeCumlesi = secilenUygulama["kelimeler" + soruNumarasi];
+            uygulamaVerileri[uygulamaAdi][soruKey] = uygulamaVerileri[uygulamaAdi][soruKey] || {}; // Soru verisini al, yoksa boş bir obje oluştur
+
+            var soruDiv = document.createElement("div");
+            soruDiv.className = "soru-alani";
+
+            // Sil butonu ekle
+            var silButonu = document.createElement("span");
+            silButonu.textContent = "X ";
+            silButonu.className = "sil-butonu";
+            silButonu.addEventListener("click", function() {
+              soruyuTemizle(uygulamaAdi, soruKey); // Sadece soruyu temizle
+            });
+            soruDiv.appendChild(silButonu);
+
+            var ustInput = document.createElement("input");
+            ustInput.type = "text";
+            ustInput.className = "input-alani";
+            ustInput.value = uygulamaVerileri[uygulamaAdi][soruKey].ustInput || ""; // Kaydedilen değeri yükle
+            soruDiv.appendChild(ustInput);
+
+            var soruSatirDiv = document.createElement("div");
+            var soruNumaraSpan = document.createElement("span");
+            soruNumaraSpan.textContent = soruNumarasi + ". ";
+            soruSatirDiv.appendChild(soruNumaraSpan);
+
+            // Cümleyi karakterlere ayır ve span'lere ekle (BOŞLUKLAR DAHİL)
+            var soruKarakterleri = soruCumlesi.split("");
+            for (let i = 0; i < soruKarakterleri.length; i++) {
+              let karakter = soruKarakterleri[i];
+              let span = document.createElement("span");
+              span.className = "soru-satiri";
+              span.textContent = karakter;
+
+              // Kaydedilen işaretleri yükle
+              if (uygulamaVerileri[uygulamaAdi][soruKey].isaretler && uygulamaVerileri[uygulamaAdi][soruKey].isaretler.includes(i)) {
+                let slashSpan = document.createElement("span");
+                slashSpan.textContent = "/";
+                slashSpan.className = "kirmizi";
+                span.insertBefore(slashSpan, span.firstChild);
+              }
+
+              span.addEventListener("click", function(event) {
+                let mevcutText = event.target.textContent;
+                let isaretIndex = soruKarakterleri.slice(0, i).join("").length; // İşaretin konacağı index
+
+                if (mevcutText.startsWith("/")) {
+                  event.target.textContent = mevcutText.substring(1);
+                  // İşaret kaldırıldı, kayıttan sil
+                  uygulamaVerileri[uygulamaAdi][soruKey].isaretler = uygulamaVerileri[uygulamaAdi][soruKey].isaretler.filter(index => index !== isaretIndex);
+                } else {
+                  let slashSpan = document.createElement("span");
+                  slashSpan.textContent = "/";
+                  slashSpan.className = "kirmizi";
+                  event.target.insertBefore(slashSpan, event.target.firstChild);
+                  // İşaret eklendi, kayda ekle
+                  uygulamaVerileri[uygulamaAdi][soruKey].isaretler = uygulamaVerileri[uygulamaAdi][soruKey].isaretler || [];
+                  uygulamaVerileri[uygulamaAdi][soruKey].isaretler.push(isaretIndex);
+                }
+
+                verileriKaydet();
+              });
+              soruSatirDiv.appendChild(span);
+            }
+
+            soruDiv.appendChild(soruSatirDiv);
+
+            var kelimeSatirDiv = document.createElement("div");
+            kelimeSatirDiv.textContent = kelimeCumlesi;
+            soruDiv.appendChild(kelimeSatirDiv);
+
+            var altInput1 = document.createElement("input");
+            altInput1.type = "text";
+            altInput1.className = "input-alani";
+            altInput1.value = uygulamaVerileri[uygulamaAdi][soruKey].altInput1 || ""; // Kaydedilen değeri yükle
+            soruDiv.appendChild(altInput1);
+
+            var altInput2 = document.createElement("input");
+            altInput2.type = "text";
+            altInput2.className = "input-alani";
+            altInput2.value = uygulamaVerileri[uygulamaAdi][soruKey].altInput2 || ""; // Kaydedilen değeri yükle
+            soruDiv.appendChild(altInput2);
+
+            var ayrac = document.createElement("div");
+            ayrac.className = "ayrac";
+            soruDiv.appendChild(ayrac);
+
+            soruAlani.appendChild(soruDiv);
+
+            // Inputlardaki değişiklikleri dinle ve kaydet
+            ustInput.addEventListener("input", function() {
+              uygulamaVerileri[uygulamaAdi][soruKey].ustInput = this.value;
+              verileriKaydet();
+            });
+
+            altInput1.addEventListener("input", function() {
+              uygulamaVerileri[uygulamaAdi][soruKey].altInput1 = this.value;
+              verileriKaydet();
+            });
+
+            altInput2.addEventListener("input", function() {
+              uygulamaVerileri[uygulamaAdi][soruKey].altInput2 = this.value;
+              verileriKaydet();
+            });
+          })(soruKey);
+        }
+      }
+      soruAlani.style.display = "block";
+    }
+
+    for (var uygulamaAdi in soruvekelimeler) {
+      (function(uygulamaAdi) { // Kapsam sorunu için IIFE kullandım
+        var li = document.createElement("li");
+
+        // Uygulama sil butonu ekle
+        var uygulamaSilButonu = document.createElement("p");
+        uygulamaSilButonu.textContent = "   X   "; // Boşluk eklendi
+        uygulamaSilButonu.className = "uygulama-sil-butonu kirmizi"; // Kırmızı renk eklendi
+        uygulamaSilButonu.style.fontWeight = "bold"; // Kalın font eklendi
+        uygulamaSilButonu.addEventListener("click", function(event) {
+          event.stopPropagation(); // Olayın listeye yayılmasını engelle
+          uygulamayiTemizle(uygulamaAdi);
+        });
+
+
+        li.textContent += uygulamaAdi; // Uygulama adını butondan sonra ekle
+        li.appendChild(uygulamaSilButonu);
+
+        li.addEventListener("click", function() {
+          // Diğer uygulamalardan .aktif sınıfını kaldır
+          var aktifUygulamalar = document.querySelectorAll('.uygulama-listesi li.aktif');
+          aktifUygulamalar.forEach(function(aktifUygulama) {
+            aktifUygulama.classList.remove('aktif');
+          });
+
+          // Tıklanan uygulamaya .aktif sınıfını ekle
+          this.classList.add('aktif');
+
+          uygulamayiYukle(uygulamaAdi);
+        });
+        uygulamaListesi.appendChild(li);
+      })(uygulamaAdi);
+    }
+  </script>
+
+</body>
+
+</html>

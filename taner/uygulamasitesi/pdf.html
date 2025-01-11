@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Viewer with PDF.js</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f9;
+    }
+    .file-list {
+      margin-bottom: 20px;
+    }
+    .file-list button {
+      display: inline-block;
+      margin-right: 10px;
+      padding: 10px 15px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .file-list button:hover {
+      background-color: #0056b3;
+    }
+    .viewer {
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      background: white;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .close-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 15px;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .close-btn:hover {
+      background-color: darkred;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="file-list">
+    <button onclick="loadPDF('mydocument1.pdf')">mydocument1.pdf</button>
+    <button onclick="loadPDF('mydocument2.pdf')">mydocument2.pdf</button>
+    <button onclick="loadPDF('mydocument3.pdf')">mydocument3.pdf</button>
+  </div>
+
+  <div id="viewer" class="viewer" style="display: none;">
+    <canvas id="pdfCanvas"></canvas>
+    <button class="close-btn" onclick="closeViewer()">Kapat</button>
+  </div>
+
+  <script>
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+    // PDF.js ayarları
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+    async function loadPDF(pdfPath) {
+      const viewer = document.getElementById('viewer');
+      const canvas = document.getElementById('pdfCanvas');
+      const ctx = canvas.getContext('2d');
+
+      // PDF dosyasını yükle
+      const pdf = await pdfjsLib.getDocument(pdfPath).promise;
+      const page = await pdf.getPage(1); // Sadece ilk sayfayı yüklüyoruz.
+
+      // Sayfa boyutlarını ayarla
+      const viewport = page.getViewport({ scale: 1.5 });
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      // PDF'yi canvas'a çiz
+      const renderContext = {
+        canvasContext: ctx,
+        viewport: viewport,
+      };
+      await page.render(renderContext).promise;
+
+      // Viewer'ı görünür yap
+      viewer.style.display = 'block';
+    }
+
+    function closeViewer() {
+      const viewer = document.getElementById('viewer');
+      const canvas = document.getElementById('pdfCanvas');
+      const ctx = canvas.getContext('2d');
+
+      // Viewer'ı gizle ve canvas'ı temizle
+      viewer.style.display = 'none';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  </script>
+
+</body>
+</html>

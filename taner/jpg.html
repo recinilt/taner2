@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sayfa Fotoğrafı Çekme</title>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body>
+  <div id="content" style="text-align: center; padding: 20px;">
+    <h1>Sayfa Fotoğrafı Çekme</h1>
+    <p>Bu sayfanın bir ekran görüntüsünü çekmek için aşağıdaki butona tıklayın.</p>
+  </div>
+
+  <div style="text-align: center; margin-top: 20px;">
+    <button id="screenshotButton" style="padding: 10px 20px; font-size: 16px;">Sayfa Fotoğrafını Çek</button>
+  </div>
+
+  <script>
+    document.getElementById("screenshotButton").addEventListener("click", () => {
+        html2canvas(document.body).then(canvas => { //html2canvas(document.getElementById("content")).then(canvas => {
+        // JPG formatında kaydetmek için canvas'ı dönüştür
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/jpeg");
+        link.download = "screenshot.jpg";
+        link.click();
+      });
+    });
+  </script>
+</body>
+</html>

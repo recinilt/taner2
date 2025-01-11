@@ -1,0 +1,83 @@
+
+body {
+  font-family: sans-serif;
+}
+
+.uygulama-listesi {
+  list-style: none;
+  padding: 0;
+}
+
+.uygulama-listesi li {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 5px;
+}
+
+/* Aktif uygulama stili */
+.uygulama-listesi li.aktif {
+  background-color: rgba(1, 69, 241, 0.146);
+  /* Saydam gri renk */
+}
+
+.soru-alani {
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: rgba(1, 241, 109, 0.146);
+}
+
+.soru-satiri {
+  display: inline-block;
+  cursor: pointer;
+  white-space: pre-wrap;
+  /* Boşlukları ve satır sonlarını koru */
+}
+
+.ayrac {
+  border-top: 1px solid #ccc;
+  margin: 10px 0;
+}
+
+.input-alani {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+  margin: 5px 0;
+}
+
+.kirmizi {
+  color: red;
+}
+
+.sil-butonu {
+  color: red;
+  cursor: pointer;
+  float: left;
+  margin-right: 10px;
+}
+
+.uygulama-sil-butonu {
+  color: red;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-right: 10px;
+}
+
+/* Mobil uyumluluk için eklenen stiller */
+@media (max-width: 768px) {
+
+  .input-alani {
+    font-size: 16px; 
+  }
+
+  .soru-satiri {
+    font-size: 18px; 
+  }
+
+  .sil-butonu, .uygulama-sil-butonu {
+    font-size: 20px; 
+  }
+}

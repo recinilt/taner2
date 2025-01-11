@@ -1,0 +1,261 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Soru Uygulaması</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        .uygulama-listesi {
+            list-style: none;
+            padding: 0;
+        }
+        .uygulama-listesi li {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+            display: flex; /* Ekleme: Temizleme ikonu için flexbox */
+            align-items: center; /* Ekleme: Dikey hizalama */
+            justify-content: space-between; /* Ekleme: İkonu sağa yasla */
+        }
+        .soru-alani {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .soru-satiri {
+            display: inline-block;
+            cursor: pointer;
+            white-space: pre-wrap;
+        }
+        .ayrac {
+            border-top: 1px solid #ccc;
+            margin: 10px 0;
+        }
+        .input-alani {
+            width: 100%;
+            padding: 5px;
+            box-sizing: border-box;
+            margin: 5px 0;
+        }
+        .kirmizi {
+            color: red;
+        }
+        .temizle-ikonu { /* Ekleme: Temizleme ikonu stili */
+            cursor: pointer;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>
+        <span class="temizle-ikonu" title="Tüm verileri temizle" onclick="clearAllLocalStorage()">x</span>
+        Uygulamalar
+    </h1>
+    
+    <ul class="uygulama-listesi" id="uygulamaListesi"></ul>
+
+    <div id="soruAlani" style="display:none;"></div>
+
+    <script>
+        var soruvekelimeler = {
+            "13TRSORU": {
+                "soru1": "Salondaki başkan ani bir kararla grubu dağıtabilir.",
+                "kelimeler1": "( president/ hall / sudden /decision disperse)",
+                "soru2": "Bu testi geçen yıl masadaki bir kurbağa üzerinde uyguladık.",
+                "kelimeler2": "(frog / apply)",
+                "soru3": "Sokaktaki adam dün bizimle samimiyetsiz konuştu.",
+                "kelimeler3": "(street/ man/insincere)"
+            },
+            "13ENSORU": {
+                "soru1": "Turkey is a developing country.",
+                "kelimeler1": "(develop: geliş- / country:ülke)",
+                "soru2": "Turkey is still developing.",
+                "kelimeler2": "(still: hala / develop: geliş-)",
+                "soru3": "Developing is crucial.",
+                "kelimeler3": "(develop: geliş-, crucial: önemli,)"
+            }
+        };
+    
+        var uygulamaListesi = document.getElementById("uygulamaListesi");
+        var soruAlani = document.getElementById("soruAlani");
+    
+        function saveToLocalStorage() {
+            var inputs = document.querySelectorAll(".input-alani");
+            var storedData = { clickedSpans: {} };
+    
+            inputs.forEach((input, index) => {
+                storedData[`input${index}`] = input.value;
+            });
+    
+            var spans = document.querySelectorAll(".soru-satiri");
+            spans.forEach((span, index) => {
+                if (span.innerHTML.startsWith('<span class="kirmizi">/</span>')) {
+                    storedData.clickedSpans[`span${index}`] = span.innerHTML;
+                }
+            });
+    
+            localStorage.setItem("uygulamaData", JSON.stringify(storedData));
+        }
+    
+        function loadFromLocalStorage() {
+            var storedData = JSON.parse(localStorage.getItem("uygulamaData") || "{}");
+    
+            var inputs = document.querySelectorAll(".input-alani");
+            inputs.forEach((input, index) => {
+                if (storedData[`input${index}`] !== undefined) {
+                    input.value = storedData[`input${index}`];
+                }
+            });
+    
+            var spans = document.querySelectorAll(".soru-satiri");
+            spans.forEach((span, index) => {
+                if (storedData.clickedSpans && storedData.clickedSpans[`span${index}`]) {
+                    span.innerHTML = storedData.clickedSpans[`span${index}`];
+                }
+            });
+        }
+    
+        function clearLocalStorage(uygulamaAdi) {
+            var storedData = JSON.parse(localStorage.getItem("uygulamaData") || "{}");
+            var newData = {};
+            for (var key in storedData) {
+                if (!key.startsWith(uygulamaAdi + "-")) {
+                    newData[key] = storedData[key];
+                }
+            }
+            localStorage.setItem("uygulamaData", JSON.stringify(newData));
+            loadFromLocalStorage();
+        }
+    
+        function clearAllLocalStorage() {
+            localStorage.clear();
+            alert("Tüm veriler temizlendi!");
+            location.reload();
+        }
+    
+        for (var uygulamaAdi in soruvekelimeler) {
+            var li = document.createElement("li");
+            li.textContent = uygulamaAdi;
+    
+            // Uygulama için temizleme ikonu
+            var uygulamaTemizleIkonu = document.createElement("span");
+            uygulamaTemizleIkonu.className = "temizle-ikonu";
+            uygulamaTemizleIkonu.textContent = "x";
+            uygulamaTemizleIkonu.title = "Bu uygulamanın verilerini temizle";
+            uygulamaTemizleIkonu.addEventListener("click", function(event) {
+                event.stopPropagation();
+                clearLocalStorage(this.parentNode.textContent);
+                alert(`${this.parentNode.textContent} verileri temizlendi!`);
+                soruAlani.innerHTML = "";
+                soruAlani.style.display = "none";
+            });
+            li.appendChild(uygulamaTemizleIkonu);
+    
+            li.addEventListener("click", function() {
+                soruAlani.innerHTML = "";
+                var secilenUygulama = soruvekelimeler[this.textContent.replace('x', '')];
+                for (var soruKey in secilenUygulama) {
+                    if (soruKey.startsWith("soru")) {
+                        var soruNumarasi = soruKey.replace("soru", "");
+                        var soruCumlesi = secilenUygulama[soruKey];
+                        var kelimeCumlesi = secilenUygulama["kelimeler" + soruNumarasi];
+    
+                        var soruDiv = document.createElement("div");
+                        soruDiv.className = "soru-alani";
+    
+                        // Soru için temizleme ikonu
+                        var soruTemizleIkonu = document.createElement("span");
+                        soruTemizleIkonu.className = "temizle-ikonu";
+                        soruTemizleIkonu.textContent = "x";
+                        soruTemizleIkonu.title = "Bu sorunun işaretlemelerini temizle";
+                        soruTemizleIkonu.addEventListener("click", function(event) {
+                            event.stopPropagation();
+                            var spanElements = soruDiv.querySelectorAll(".soru-satiri");
+                            spanElements.forEach(span => {
+                                span.innerHTML = span.textContent;
+                            });
+                            var inputElements = soruDiv.querySelectorAll(".input-alani");
+                            inputElements.forEach(input => {
+                                input.value = "";
+                            });
+                            saveToLocalStorage();
+                            alert("Bu sorunun işaretlemeleri temizlendi!");
+                        });
+                        soruDiv.appendChild(soruTemizleIkonu);
+    
+                        var ustInput = document.createElement("input");
+                        ustInput.type = "text";
+                        ustInput.className = "input-alani";
+                        ustInput.addEventListener("input", saveToLocalStorage);
+                        ustInput.addEventListener("blur", saveToLocalStorage);
+                        soruDiv.appendChild(ustInput);
+    
+                        var soruSatirDiv = document.createElement("div");
+                        var soruNumaraSpan = document.createElement("span");
+                        soruNumaraSpan.textContent = soruNumarasi + ". ";
+                        soruSatirDiv.appendChild(soruNumaraSpan);
+    
+                        for (let i = 0; i < soruCumlesi.length; i++) {
+                            let karakter = soruCumlesi[i];
+                            let span = document.createElement("span");
+                            span.className = "soru-satiri";
+                            span.textContent = karakter;
+                            span.addEventListener("click", function(event) {
+                                let span = event.target;
+                                if (span.innerHTML.startsWith('<span class="kirmizi">/</span>') || span.innerHTML.startsWith('<span>/</span>') || span.innerHTML.startsWith('/')) {
+                                    span.innerHTML = span.textContent.replace(/^\/\s*/, ''); // Kırmızı "/" işaretini kaldır
+                                } else {
+                                    span.innerHTML = '<span class="kirmizi">/</span>' + span.textContent.trim(); // Kırmızı işaret ekle
+                                }
+                                saveToLocalStorage();
+                            });
+
+                            
+                            soruSatirDiv.appendChild(span);
+                        }
+    
+                        soruDiv.appendChild(soruSatirDiv);
+    
+                        var kelimeSatirDiv = document.createElement("div");
+                        kelimeSatirDiv.textContent = kelimeCumlesi;
+                        soruDiv.appendChild(kelimeSatirDiv);
+    
+                        var altInput1 = document.createElement("input");
+                        altInput1.type = "text";
+                        altInput1.className = "input-alani";
+                        altInput1.addEventListener("input", saveToLocalStorage);
+                        altInput1.addEventListener("blur", saveToLocalStorage);
+                        soruDiv.appendChild(altInput1);
+    
+                        var altInput2 = document.createElement("input");
+                        altInput2.type = "text";
+                        altInput2.className = "input-alani";
+                        altInput2.addEventListener("input", saveToLocalStorage);
+                        altInput2.addEventListener("blur", saveToLocalStorage);
+                        soruDiv.appendChild(altInput2);
+    
+                        var ayrac = document.createElement("div");
+                        ayrac.className = "ayrac";
+                        soruDiv.appendChild(ayrac);
+    
+                        soruAlani.appendChild(soruDiv);
+                    }
+                }
+                soruAlani.style.display = "block";
+                loadFromLocalStorage();
+            });
+            uygulamaListesi.appendChild(li);
+        }
+    
+        window.addEventListener("load", loadFromLocalStorage);
+    </script>
+    
+
+</body>
+</html>

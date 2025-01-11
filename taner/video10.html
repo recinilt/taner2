@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konu Anlatımı Videoları</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        iframe {
+            margin-top: 20px;
+            width: 80%;
+            height: 400px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Konu Anlatımı Videoları</h1>
+    <button onclick="showVideo(1)">Konu Anlatımı 1. Video</button>
+    <button onclick="showVideo(2)">Konu Anlatımı 2. Video</button>
+
+    <div id="video-container"></div>
+
+    <script>
+        function showVideo(videoNumber) {
+            var videoUrl;
+            if (videoNumber === 1) {
+                videoUrl = "https://1drv.ms/v/s!AtsONtPQLeLUie1L3pSZK1zk4XDaWg?e=7xyYhK";
+            } else if (videoNumber === 2) {
+                videoUrl = "https://1drv.ms/v/s!AtsONtPQLeLUie02O-3SXBNOr2woCw?e=xN0Gol";
+            }
+
+            var iframe = `<iframe src="${videoUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            document.getElementById("video-container").innerHTML = iframe;
+        }
+    </script>
+
+</body>
+</html>

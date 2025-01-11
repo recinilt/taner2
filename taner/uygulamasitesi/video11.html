@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Video Oynatıcı</title>
+  <style>
+    /* Videoyu ortalamak ve boyutlandırmak için temel CSS */
+    .video-container {
+      position: relative;
+      width: 640px;
+      height: 360px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* Videoyu en boy oranını koruyarak sığdır */
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Video Oynatıcı</h1>
+
+  <button onclick="playVideo('2. İlgi Eki -ki (Örnekler).mp4')">ki eki</button>
+  <button onclick="playVideo('3.İlgi Ekinin Düşürülmesi.mp4')">ki dönüşümü</button>
+  
+  <div class="video-container">
+    <video id="myVideo" controls preload="none">
+      Tarayıcınız video etiketini desteklemiyor.
+    </video>
+  </div>
+
+  <script>
+    function playVideo(videoSrc) {
+      var video = document.getElementById("myVideo");
+      video.src = videoSrc;
+      video.load(); // Yeni kaynağı yükle
+      video.play();
+    }
+  </script>
+
+</body>
+</html>

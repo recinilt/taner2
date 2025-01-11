@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Soru Uygulaması</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        .uygulama-listesi {
+            list-style: none;
+            padding: 0;
+        }
+        .uygulama-listesi li {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+        }
+        .soru-alani {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .soru-satiri {
+            display: inline-block;
+            cursor: pointer;
+            white-space: pre-wrap; /* Boşlukları ve satır sonlarını koru */
+        }
+        .ayrac {
+            border-top: 1px solid #ccc;
+            margin: 10px 0;
+        }
+        .input-alani {
+            width: 100%;
+            padding: 5px;
+            box-sizing: border-box;
+            margin: 5px 0;
+        }
+        .kirmizi {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Uygulamalar</h1>
+    <ul class="uygulama-listesi" id="uygulamaListesi"></ul>
+
+    <div id="soruAlani" style="display:none;"></div>
+
+    <script>
+        var soruvekelimeler = {
+            "13TRSORU": {
+                "soru1": "Salondaki başkan ani bir kararla grubu dağıtabilir.",
+                "kelimeler1": "( president/ hall / sudden /decision disperse)",
+                "soru2": "Bu testi geçen yıl masadaki bir kurbağa üzerinde uyguladık.",
+                "kelimeler2": "(frog / apply)",
+                "soru3": "Sokaktaki adam dün bizimle samimiyetsiz konuştu.",
+                "kelimeler3": "(street/ man/insincere)"
+            },
+            "13ENSORU": {
+                "soru1": "Turkey is a developing country.",
+                "kelimeler1": "(develop: geliş- / country:ülke)",
+                "soru2": "Turkey is still developing.",
+                "kelimeler2": "(still: hala / develop: geliş-)",
+                "soru3": "Developing is crucial.",
+                "kelimeler3": "(develop: geliş-, crucial: önemli,)"
+            }
+        };
+
+        var uygulamaListesi = document.getElementById("uygulamaListesi");
+        var soruAlani = document.getElementById("soruAlani");
+
+        for (var uygulamaAdi in soruvekelimeler) {
+            var li = document.createElement("li");
+            li.textContent = uygulamaAdi;
+            li.addEventListener("click", function() {
+                soruAlani.innerHTML = "";
+                var secilenUygulama = soruvekelimeler[this.textContent];
+                for (var soruKey in secilenUygulama) {
+                    if (soruKey.startsWith("soru")) {
+                        var soruNumarasi = soruKey.replace("soru", "");
+                        var soruCumlesi = secilenUygulama[soruKey];
+                        var kelimeCumlesi = secilenUygulama["kelimeler" + soruNumarasi];
+
+                        var soruDiv = document.createElement("div");
+                        soruDiv.className = "soru-alani";
+
+                        var ustInput = document.createElement("input");
+                        ustInput.type = "text";
+                        ustInput.className = "input-alani";
+                        soruDiv.appendChild(ustInput);
+
+                        var soruSatirDiv = document.createElement("div");
+                        var soruNumaraSpan = document.createElement("span");
+                        soruNumaraSpan.textContent = soruNumarasi + ". ";
+                        soruSatirDiv.appendChild(soruNumaraSpan);
+
+                        // Cümleyi karakterlere ayır ve span'lere ekle (BOŞLUKLAR DAHİL)
+                        for (let i = 0; i < soruCumlesi.length; i++) {
+                            let karakter = soruCumlesi[i];
+                            let span = document.createElement("span");
+                            span.className = "soru-satiri";
+                            span.textContent = karakter;
+
+                            span.addEventListener("click", function(event) {
+                                let mevcutText = event.target.textContent;
+                                if (mevcutText.startsWith("/")) {
+                                    event.target.textContent = mevcutText.substring(1);
+                                } else {
+                                    let slashSpan = document.createElement("span");
+                                    slashSpan.textContent = "/";
+                                    slashSpan.className = "kirmizi";
+                                    event.target.insertBefore(slashSpan, event.target.firstChild);
+                                }
+                            });
+                            soruSatirDiv.appendChild(span);
+                        }
+
+                        soruDiv.appendChild(soruSatirDiv);
+
+                        var kelimeSatirDiv = document.createElement("div");
+                        kelimeSatirDiv.textContent = kelimeCumlesi;
+                        soruDiv.appendChild(kelimeSatirDiv);
+
+                        var altInput1 = document.createElement("input");
+                        altInput1.type = "text";
+                        altInput1.className = "input-alani";
+                        soruDiv.appendChild(altInput1);
+
+                        var altInput2 = document.createElement("input");
+                        altInput2.type = "text";
+                        altInput2.className = "input-alani";
+                        soruDiv.appendChild(altInput2);
+
+                        var ayrac = document.createElement("div");
+                        ayrac.className = "ayrac";
+                        soruDiv.appendChild(ayrac);
+
+                        soruAlani.appendChild(soruDiv);
+                    }
+                }
+                soruAlani.style.display = "block";
+            });
+            uygulamaListesi.appendChild(li);
+        }
+    </script>
+
+</body>
+</html>  
