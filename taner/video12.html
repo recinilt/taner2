@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Video Oynatıcı</title>
+<style>
+  .video-container {
+    display: none; /* Başlangıçta videoları gizle */
+    position: relative;
+    width: 640px;
+    height: 360px;
+    margin: 20px auto;
+  }
+
+  .video-container.active {
+    display: block; /* Aktif video konteynerını göster */
+  }
+</style>
+</head>
+<body>
+
+<h2>Videolar</h2>
+
+<button onclick="openVideo('video1')">Video 1</button>
+<button onclick="openVideo('video2')">Video 2</button>
+
+<div id="video1" class="video-container">
+  <iframe width="640" height="360" src="https://www.youtube.com/embed/zzHo2A4iKMA" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<div id="video2" class="video-container">
+  <iframe width="640" height="360" src="https://www.youtube.com/embed/7cKLHaf3-uM" frameborder="0" allowfullscreen></iframe>
+</div>
+
+<script>
+function openVideo(videoId) {
+  // Tüm video konteynerlarını gizle
+  var videoContainers = document.querySelectorAll('.video-container');
+  videoContainers.forEach(function(container) {
+    container.classList.remove('active');
+  });
+
+  // Seçilen video konteynerını göster
+  var videoContainer = document.getElementById(videoId);
+  videoContainer.classList.add('active');
+}
+</script>
+
+</body>
+</html>
