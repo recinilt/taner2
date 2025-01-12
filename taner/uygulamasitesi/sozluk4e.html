@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Türkçe-İngilizce Kelime Okuyucu</title>
+    <style>
+        #kelimeGoster {
+            font-size: 2em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Kelime Okuyucu</h1>
+
+    <button id="turkceIngilizceOku">Türkçe-İngilizce Kelimeleri Oku</button>
+    <button id="ingilizceTurkceOku">İngilizce-Türkçe Kelimeleri Oku</button>
+
+    <div id="kelimeGoster"></div>
+
+    <script src="sozlukturkceingilizce4etap.js"></script>
+    <script src="sozlukingilizceturkce4etap.js"></script>
+    <script>
+        
+
+        const turkceIngilizceButton = document.getElementById('turkceIngilizceOku');
+        const ingilizceTurkceButton = document.getElementById('ingilizceTurkceOku');
+        const kelimeGoster = document.getElementById('kelimeGoster');
+
+        let currentUtterance;
+        let i = 0;
+
+        turkceIngilizceButton.addEventListener('click', () => {
+            speechSynthesis.cancel(); 
+            oku(turkceingilizce, 'tr-TR');
+        });
+
+        ingilizceTurkceButton.addEventListener('click', () => {
+            speechSynthesis.cancel(); 
+            oku(ingilizceturkce, 'en-US');
+        });
+
+        // ... (önceki kodlar) ...
+
+function oku(kelimeListesi, lang) {
+    let kelimeler = Object.entries(kelimeListesi);
+
+    if (speechSynthesis.speaking) { 
+        speechSynthesis.cancel(); 
+        kelimeGoster.textContent = '';
+        return;
+    }
+
+    const speak = () => {
+        if (i < kelimeler.length) {
+            let kelime = kelimeler[i][0];
+            let ceviri = kelimeler[i][1];
+            kelimeGoster.textContent = `${kelime} - ${ceviri}`;
+
+            currentUtterance = new SpeechSynthesisUtterance(kelime);
+            currentUtterance.lang = lang;
+            currentUtterance.onend = () => { 
+                currentUtterance = new SpeechSynthesisUtterance(ceviri);
+                currentUtterance.lang = lang === 'tr-TR' ? 'en-US' : 'tr-TR';
+                currentUtterance.onend = () => { 
+                    i++;
+                    speak(); 
+                };
+                speechSynthesis.speak(currentUtterance);
+            };
+            speechSynthesis.speak(currentUtterance);
+        } else {
+            i = 0; 
+            kelimeGoster.textContent = '';
+        }
+    };
+
+    speak(); 
+}
+
+// ... (sonraki kodlar) ...
+    </script>
+
+</body>
+</html>
